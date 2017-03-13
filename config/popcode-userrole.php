@@ -4,7 +4,7 @@ return [
     /**
      * inclusive:
      * if true than a bigger role includes all lower values
-     * else all routes has to be the exact identifier
+     * else all routes has to be the exact identifier and there will be created a role_x_user table to enable n:n connection
      */
     'inclusive' => true,
 

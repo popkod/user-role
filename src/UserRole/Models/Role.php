@@ -11,4 +11,13 @@ class Role extends Eloquent
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public function users() {
+        return $this->belongsToMany(
+            \Config::get('popcode-usercrud.model'),
+            'user_x_role',
+            'role_id',
+            'user_id'
+        );
+    }
 }

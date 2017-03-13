@@ -3,7 +3,6 @@
 namespace PopCode\UserRole\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Config;
 use Carbon\Carbon;
 
 class UserRoleServiceProvider extends ServiceProvider
@@ -48,10 +47,18 @@ class UserRoleServiceProvider extends ServiceProvider
                 'migrations'
             );
         }
+        if (!class_exists('CreateRoleXUserTable') && $this->getConfig('inclusive') === false) {
+            $this->publishes(
+                [
+                    $this->root . 'migrations/2017_03_13_155021_create_role_x_user_table.php' => database_path('migrations/' . $this->getDatePrefix() . '_create_role_x_user_table.php'),
+                ],
+                'migrations'
+            );
+        }
     }
 
     protected function routes() {
-        if (Config::get('popcode-userrole.register_default_routes')) {
+        if ($this->getConfig('register_default_routes')) {
             // register routes
             $this->loadRoutesFrom($this->root . 'routes/popcode-userrole-routes.php');
         }
@@ -70,5 +77,12 @@ class UserRoleServiceProvider extends ServiceProvider
         $formatted = $this->datePrefix->format('Y_m_d_His');
         $this->datePrefix->addSecond();
         return $formatted;
+    }
+
+    protected function getConfig($key, $default = null) {
+        if (class_exists('\\Config')) {
+            return \Config::get('popcode-userrole.' . $key, $default);
+        }
+        return $default;
     }
 }
