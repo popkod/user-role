@@ -1,0 +1,33 @@
+{
+    "name": "popcode/user-role",
+    "description": "Basic user role management for Laravel",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Endre Varga",
+            "email": "endre.varga@popcode.hu"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6",
+        "laravel/framework": ">=5.0",
+        "illuminate/config": "^5.4"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "PopCode\\UserRole\\": "src/UserRole/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "": "tests/"
+        }
+    }
+}
