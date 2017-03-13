@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.6",
         "laravel/framework": ">=5.0",
-        "illuminate/config": "^5.4"
+        "illuminate/config": "^5.4",
+        "popcode/user-crud": "^0.0.17"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -29,5 +30,11 @@
         "psr-4": {
             "": "tests/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/popkod/user-crud"
+        }
+    ]
 }
