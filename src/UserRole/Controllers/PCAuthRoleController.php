@@ -5,7 +5,7 @@ namespace PopCode\UserRole\Controllers;
 use Illuminate\Routing\Controller as BaseController;
 use Config;
 
-class RoleController extends BaseController
+class PCAuthRoleController extends BaseController
 {
     public function index() {
         $roles = Config::get('popcode-usercrud.roles', []);
