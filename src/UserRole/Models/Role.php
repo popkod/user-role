@@ -20,4 +20,8 @@ class Role extends Eloquent
             'user_id'
         );
     }
+
+    public function routes() {
+        return $this->hasMany(RouteXRole::class, 'role_id', 'id');
+    }
 }

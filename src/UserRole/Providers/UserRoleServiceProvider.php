@@ -14,8 +14,7 @@ class UserRoleServiceProvider extends ServiceProvider
      */
     protected $datePrefix;
 
-    public function boot() {
-
+    public function register() {
         $this->root = __DIR__ . '/../../../';
 
         $this->config();
@@ -34,7 +33,7 @@ class UserRoleServiceProvider extends ServiceProvider
         );
 
         // merge configuration
-        $this->mergeConfigFrom($this->root . 'config/popcode-userrole.php', 'popcode-userrole');
+        //$this->mergeConfigFrom($this->root . 'config/popcode-userrole.php', 'popcode-userrole');
     }
 
     protected function migrations() {
@@ -43,11 +42,12 @@ class UserRoleServiceProvider extends ServiceProvider
                 [
                     $this->root . 'migrations/2017_03_13_141819_create_roles_table.php'    => database_path('migrations/' . $this->getDatePrefix() . '_create_roles_table.php'),
                     $this->root . 'migrations/2017_03_13_150435_call_user_role_seeder.php' => database_path('migrations/' . $this->getDatePrefix() . '_call_user_role_seeder.php'),
+                    $this->root . 'migrations/2017_03_14_153037_create_route_x_role_table.php' => database_path('migrations/' . $this->getDatePrefix() . '_create_route_x_role_table.php'),
                 ],
                 'migrations'
             );
         }
-        if (!class_exists('CreateRoleXUserTable') && $this->getConfig('inclusive') === false) {
+        if (!class_exists('CreateRoleXUserTable')) {
             $this->publishes(
                 [
                     $this->root . 'migrations/2017_03_13_155021_create_role_x_user_table.php' => database_path('migrations/' . $this->getDatePrefix() . '_create_role_x_user_table.php'),
@@ -55,6 +55,12 @@ class UserRoleServiceProvider extends ServiceProvider
                 'migrations'
             );
         }
+        $this->publishes(
+            [
+                $this->root . 'migrations/2017_03_13_155021_create_role_x_user_table.php' => database_path('migrations/' . $this->getDatePrefix() . '_create_role_x_user_table---asd.php'),
+            ],
+            'migrations'
+        );
     }
 
     protected function routes() {
@@ -85,4 +91,5 @@ class UserRoleServiceProvider extends ServiceProvider
         }
         return $default;
     }
+
 }

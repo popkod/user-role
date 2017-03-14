@@ -9,8 +9,11 @@ return [
     'inclusive' => true,
 
     'model' => PopCode\UserRole\Models\Role::class,
+    'route_model' => \PopCode\UserRole\Models\RouteXRole::class,
 
     // you can enable default routes here
     // keep in mind this routes are not contain any guards
     'register_default_routes' => false,
+
+    'cache_path' => storage_path('vendor/popcode'),
 ];
