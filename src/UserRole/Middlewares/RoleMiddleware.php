@@ -2,6 +2,7 @@
 
 namespace PopCode\UserRole\Middleware;
 
+use Illuminate\Auth\AuthenticationException;
 use Route;
 use Closure;
 use PopCode\UserRole\Models;
@@ -24,19 +25,32 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $this->route = Route::current();
+        $this->route = Route::current()->uri;
         $this->method = strtoupper($request->method());
 
-        $this->checkAccess(1);
+        // TODO: user->role / user->roles
+        $role = [1];
+        $this->checkAccess($role);
         return $next($request);
     }
 
-    protected function checkAccess($role) {
-        $routesXRoles = new \PopCode\UserRole\Helpers\CacheHelper();
-        $key = is_numeric($role) ? 'by_num' : 'by_label';
+    protected function checkAccess($roles) {
+        $routesXRoles = (new \PopCode\UserRole\Helpers\CacheHelper())->get();
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
 
-        return !isset($routesXRoles[$key][$this->route]) ||
-                !isset($routesXRoles[$key][$this->route][$this->method]) ||
-                isset($routesXRoles[$key][$this->route][$this->method][$role]);
+        if (!isset($routesXRoles[$this->route]) || !isset($routesXRoles[$this->route][$this->method])) {
+            return;
+        }
+
+        foreach($roles as $role) {
+            $key = is_numeric($role) ? 'by_num' : 'by_label';
+            if (isset($routesXRoles[$this->route][$this->method][$key][$role])) {
+                return;
+            }
+        }
+
+        throw new AuthenticationException;
     }
 }

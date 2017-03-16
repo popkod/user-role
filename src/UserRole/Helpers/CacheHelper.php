@@ -24,26 +24,20 @@ class CacheHelper
         $model = \Config::get('popcode-userrole.route_model', \PopCode\UserRole\Models\RouteXRole::class);
         $model = new $model();
         $routes = $model->with('role')->get();
-        $byRoleNum = [];
-        $byRoleLabel = [];
-        $routes->each(function($route) use (&$byRoleNum, &$byRoleLabel) {
-            isset($byRoleNum[$route->route]) || $byRoleNum[$route->route] = [];
-            isset($byRoleLabel[$route->route]) || $byRoleLabel[$route->route] = [];
+        $roles = [];
+        $routes->each(function($route) use (&$roles) {
+            isset($roles[$route->route]) || $roles[$route->route] = [];
             $methods = explode('|', $route->method);
             foreach ($methods as $method) {
-                isset($byRoleNum[$route->route][$method]) || $byRoleNum[$route->route][$method] = [];
-                isset($byRoleLabel[$route->route][$method]) || $byRoleLabel[$route->route][$method] = [];
-                $byRoleNum[$route->route][$method][$route->role->id] = $route->role->label;
-                $byRoleLabel[$route->route][$method][$route->role->label] = $route->role->id;
+                isset($roles[$route->route][$method]) || $roles[$route->route][$method] = ['by_label' => [], 'by_num' => []];
+
+                $roles[$route->route][$method]['by_label'][$route->role->label] = $route->role->label;
+                $roles[$route->route][$method]['by_num'][$route->role->id] = $route->role->id;
             }
         });
-        $processed = [
-            'by_num' => $byRoleNum,
-            'by_label' => $byRoleLabel,
-        ];
 
-        \File::put($this->cacheFile, json_encode($processed));
-        return $processed;
+        \File::put($this->cacheFile, json_encode($roles));
+        return $roles;
     }
 
     protected function checkDirectory() {
