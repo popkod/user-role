@@ -4,6 +4,7 @@ namespace PopCode\UserRole\Controllers;
 
 use PopCode\UserRole\Models\Role;
 use Illuminate\Routing\Controller as BaseController;
+use PopCode\UserRole\Models\RouteXRole;
 
 class RouteXRoleController extends BaseController
 {
@@ -25,6 +26,15 @@ class RouteXRoleController extends BaseController
          * (opt) route: '{any}'
          * }
          */
+        $routes = \Request::get('routes');
+
+        \DB::transaction(function() use ($routes) {
+            RouteXRole::where('id', '>', '0')->delete();
+            array_walk($routes, function($route) {
+                $route['methods'] = implode('|', $route['methods']);
+                RouteXRole::create($route);
+            });
+        });
 
         // delete all / or for the provided route
         // insert all
