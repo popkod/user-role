@@ -8,6 +8,8 @@ return [
      */
     'inclusive' => true,
 
+    'path_whitelist' => [],
+
     'model' => PopCode\UserRole\Models\Role::class,
     'route_model' => \PopCode\UserRole\Models\RouteXRole::class,
 

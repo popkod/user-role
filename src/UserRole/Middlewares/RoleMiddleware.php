@@ -31,10 +31,15 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $this->loadUser();
-
         $this->route = Route::current()->uri;
         $this->method = strtoupper($request->method());
+
+        $whiteList = \Config::get('popcode-userrole.path_whitelist', []);
+        if (in_array(ltrim($request->getPathInfo(), '/'), $whiteList)) {
+            return $next($request);
+        }
+
+        $this->loadUser();
 
         if (!empty($guards)) {
             if ($this->user->hasAnyRole($guards)) {
