@@ -1,6 +1,6 @@
 <?php
 
-namespace PopCode\UserRole\Middleware;
+namespace PopCode\UserRole\Middlewares;
 
 use Illuminate\Auth\AuthenticationException;
 use Prophecy\Exception\Doubler\MethodNotFoundException;

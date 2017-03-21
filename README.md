@@ -16,8 +16,8 @@ then run the migration: `php artisan migrate`
 - edit seeder, config + composer update
 - migrate // calls the seeder
 
-In app/Http/Kernel.php add `'pcauth' => \App\Http\Middleware\PCAuthenticate::class,` to the $routeMiddleware array
+In app/Http/Kernel.php add `'pcauth' => \App\Http\Middlewares\PCAuthenticate::class,` to the $routeMiddleware array
 
-In the $middlewareGroups add `\PopCode\UserRole\Middleware\RoleMiddleware::class,` to web, and `'pcrole',` to api
+In the $middlewareGroups add `\PopCode\UserRole\Middlewares\RoleMiddleware::class,` to web, and `'pcrole',` to api
 
 
