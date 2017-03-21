@@ -39,13 +39,18 @@ class RoleMiddleware
             return $next($request);
         }
 
-        $this->loadUser();
-
         if (!empty($guards)) {
-            if ($this->user->hasAnyRole($guards)) {
-                return $next($request);
+            $this->loadUser();
+            if (\Config::get('popcode-userrole.inclusive', false)) {
+                if ($this->user->hasAtLeastRole($this->getMinGuardId($guards))) {
+                    return $next($request);
+                }
+            } else {
+                if ($this->user->hasAnyRole($guards)) {
+                    return $next($request);
+                }
             }
-            throw new AuthenticationException;
+            abort(403, 'Permission denied');
         }
 
         $this->checkAccess();
@@ -53,6 +58,10 @@ class RoleMiddleware
     }
 
     protected function loadUser() {
+        if ($this->user) {
+            return;
+        }
+
         if (class_exists('\\PCAuth')) {
             $user = \PCAuth::user();
         } else {
@@ -68,6 +77,10 @@ class RoleMiddleware
             throw new MethodNotFoundException('The method getRoles must be implemented on User model!', get_class($user), 'getRoles');
         }
 
+        if (!method_exists($user, 'hasAtLeastRole')) {
+            throw new MethodNotFoundException('The method hasAtLeastRole must be implemented on User model!', get_class($user), 'hasAtLeastRole');
+        }
+
     }
 
     protected function getUserRoles() {
@@ -75,7 +88,6 @@ class RoleMiddleware
     }
 
     protected function checkAccess() {
-        $roles = $this->getUserRoles()->pluck('id')->toArray();
 
         $routesXRoles = (new \PopCode\UserRole\Helpers\CacheHelper())->get();
 
@@ -83,6 +95,8 @@ class RoleMiddleware
             return;
         }
 
+        $this->loadUser();
+        $roles = $this->getRolesByGuards($this->getUserRoles()->pluck('id')->toArray());
         foreach($roles as $role) {
 //            $key = is_numeric($role) ? 'by_num' : 'by_label';
             $key = 'by_num';
@@ -91,6 +105,29 @@ class RoleMiddleware
             }
         }
 
-        throw new AuthenticationException;
+        abort(403, 'Permission denied');
+    }
+
+    protected function getRolesByGuards($guards) {
+        $ids = [];
+        $labels = [];
+        foreach ($guards as $guard) {
+            if (is_numeric($guard)) {
+                $ids[] = $guard;
+            } else {
+                $labels[] = $guard;
+            }
+        }
+        if (!empty($labels)) {
+            $ids = array_merge($ids, Models\Role::whereIn('label', $labels)->get()->pluck('id')->toArray());
+        }
+        if (\Config::get('popcode-userrole.inclusive', false)) {
+            $ids = range(0, max($ids));
+        }
+        return $ids;
+    }
+
+    protected function getMinGuardId($guards) {
+        return min($this->getRolesByGuards($guards));
     }
 }

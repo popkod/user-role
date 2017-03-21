@@ -40,4 +40,21 @@ class User extends BaseUser
         }
         return false;
     }
+
+    /**
+     * @param int $role
+     *
+     * @return bool
+     */
+    public function hasAtLeastRole($role) {
+        if (is_null($this->roleCahce)) {
+            $this->getRoles();
+        }
+        foreach ($this->roleCahce as $ownRole) {
+            if ($ownRole->id >= $role) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
