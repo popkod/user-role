@@ -3,12 +3,12 @@
 namespace PopCode\UserRole\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
-use Config;
+use PopCode\UserRole\Models\Role;
 
 class RoleController extends BaseController
 {
     public function index() {
-        $roles = Config::get('popcode-usercrud.roles', []);
+        $roles = Role::all();
 
         return response()->json($roles);
     }
