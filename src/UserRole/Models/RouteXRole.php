@@ -4,7 +4,7 @@ namespace PopCode\UserRole\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class RouteXRole extends \Eloquent
+class RouteXRole extends Eloquent
 {
     public $table = 'route_x_role';
 

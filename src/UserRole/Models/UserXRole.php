@@ -2,7 +2,9 @@
 
 namespace PopCode\UserRole\Models;
 
-class UserXRole
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
+class UserXRole extends Eloquent
 {
     protected $table = 'user_x_role';
 
