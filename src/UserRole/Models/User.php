@@ -12,6 +12,10 @@ class User extends BaseUser
         return $this->belongsToMany(Role::class, 'user_x_role');
     }
 
+    public function userXRole() {
+        return $this->hasMany(\Config::get('popcode-userrole.user_x_role_model'), 'user_id', 'id');
+    }
+
     public function getRoles() {
         $this->roleCahce = $this->roles()->get();
         return $this->roleCahce;

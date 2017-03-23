@@ -12,6 +12,7 @@ return [
 
     'model' => PopCode\UserRole\Models\Role::class,
     'route_model' => \PopCode\UserRole\Models\RouteXRole::class,
+    'user_x_role_model' => \PopCode\UserRole\Models\UserXRole::class,
 
     // you can enable default routes here
     // keep in mind this routes are not contain any guards
