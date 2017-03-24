@@ -8,6 +8,8 @@ class UserXRole extends Eloquent
 {
     protected $table = 'user_x_role';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'role_id',
