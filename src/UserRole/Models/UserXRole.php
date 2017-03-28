@@ -14,4 +14,10 @@ class UserXRole extends Eloquent
         'user_id',
         'role_id',
     ];
+
+    protected $casts = [
+        'id'      => 'integer',
+        'user_id' => 'integer',
+        'role_id' => 'integer',
+    ];
 }
