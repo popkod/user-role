@@ -122,7 +122,7 @@ class RoleMiddleware
             $ids = array_merge($ids, Models\Role::whereIn('label', $labels)->get()->pluck('id')->toArray());
         }
         if (\Config::get('popcode-userrole.inclusive', false)) {
-            $ids = range(0, max($ids));
+            $ids = range(min($ids), 4);
         }
         return $ids;
     }
